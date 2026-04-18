@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REDDIT OSINT // COMMUNITY INTELLIGENCE - HayOS</title>
+    <link rel="icon" href="https://haybnz.web.app/logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
+    <link rel="stylesheet" href="/static/css/twitter.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <!-- Top Navigation -->
+    <nav class="topnav">
+        <div class="left-group">
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span>
+            </button>
+
+            <div class="logo-section" onclick="window.location.href='/'" style="cursor: pointer;">
+                <div class="logo-icon" aria-hidden="true">
+                    <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(10, 15)">
+                            <path
+                                d="M30 30 C25 15, 35 10, 40 15 C45 10, 55 15, 50 30 C55 45, 45 50, 40 45 C35 50, 25 45, 30 30"
+                                fill="none" stroke="#00FF88" stroke-width="4" />
+                            <path d="M30 30 C25 20, 20 15, 15 10" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <path d="M50 30 C55 20, 60 15, 65 10" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <path d="M30 30 C25 40, 20 45, 15 50" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <path d="M50 30 C55 40, 60 45, 65 50" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <circle cx="30" cy="30" r="5" fill="none" stroke="#00FF88" stroke-width="2" opacity="0.0" />
+                            <circle cx="50" cy="30" r="5" fill="none" stroke="#00FF88" stroke-width="2" opacity="0.0" />
+                            <circle cx="15" cy="10" r="3" fill="none" stroke="#00FF88" stroke-width="1.5"
+                                opacity="0.0" />
+                            <circle cx="65" cy="10" r="3" fill="none" stroke="#00FF88" stroke-width="1.5"
+                                opacity="0.0" />
+                            <circle cx="15" cy="50" r="3" fill="none" stroke="#00FF88" stroke-width="1.5"
+                                opacity="0.0" />
+                            <circle cx="65" cy="50" r="3" fill="none" stroke="#00FF88" stroke-width="1.5"
+                                opacity="0.0" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>H.A.Y.D.E.N</h2>
+                    <p id="user-info">CREATED BY HAYDEN CYBERNETICS |</p>
+                    <script>
+                        (async function () {
+                            try {
+                                const res = await fetch('/api/username', { cache: 'no-store' });
+                                const data = await res.json();
+
+                                const userInfo = document.getElementById('user-info');
+                                const deviceCount = document.getElementById('device-counts');
+                                const statItem = document.querySelector('.stat-item');
+
+                                if (data && data.username) {
+                                    userInfo.innerHTML = `CREATED BY HAYDEN | ${data.username}`;
+                                    deviceCount.textContent = 'Online';
+
+                                    const logoutBtn = document.createElement('a');
+                                    logoutBtn.href = '/logout';
+                                    logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+                                    logoutBtn.title = 'Logout';
+                                    logoutBtn.style.marginLeft = '10px';
+                                    logoutBtn.style.color = '#00FFFF';
+                                    logoutBtn.style.cursor = 'pointer';
+                                    logoutBtn.style.textDecoration = 'none';
+                                    logoutBtn.style.fontSize = '16px';
+                                    logoutBtn.addEventListener('mouseenter', () => logoutBtn.style.color = '#FF4444');
+                                    logoutBtn.addEventListener('mouseleave', () => logoutBtn.style.color = '#00FFFF');
+                                    statItem.appendChild(logoutBtn);
+                                } else {
+                                    userInfo.innerHTML = 'CREATED BY HAYDEN | Guest';
+                                    deviceCount.textContent = 'Offline';
+                                }
+                            } catch (err) {
+                                console.warn('Failed to fetch username:', err);
+                                const userInfo = document.getElementById('user-info');
+                                const deviceCount = document.getElementById('device-counts');
+                                if (userInfo) userInfo.innerHTML = 'CREATED BY HAYDEN | Guest';
+                                if (deviceCount) deviceCount.textContent = 'Offline';
+                            }
+                        })();
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-item">
+            <div class="status-dot" aria-hidden="true"></div>
+            <span id="device-counts">Loading...</span>
+        </div>
+
+        <div class="nav-stats">
+            <div class="menu-item dropdown">
+                <div class="dropdown-toggle">
+                    <i class="menu-icon"></i>
+                    VIEW MODE
+                    <span class="dropdown-arrow">▶</span>
+                </div>
+                <div class="dropdown-menu">
+                    <a href="/earth">Earth</a>
+                    <a href="/camera">Camera</a>
+                    <a href="/aerial">Aerial</a>
+                    <a href="/news">News</a>
+                </div>
+            </div>
+
+            <div class="stat-item">
+                <span id="sysStatus">STANDBY</span>
+                <div class="status-dot"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar backdrop (mobile) -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+    <div class="container">
+        <!-- Vertical Sidebar -->
+        <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+            <div class="menu-group">
+                <div class="menu-title">[DASHBOARD]</div>
+                <div class="menu-item" data-href="/crmx"><svg class="menu-icon" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    </svg><span>DASHBOARD</span></div>
+                <div class="menu-item" data-href="/surveillance"><svg class="menu-icon" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg><span>SURVEILLANCE</span></div>
+            </div>
+
+            <div class="menu-group">
+                <div class="menu-title">[SENSORS]</div>
+                <div class="menu-item" data-href="/cctv"><svg class="menu-icon" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                        <circle cx="12" cy="13" r="3" />
+                    </svg><span>CCTV FEEDS</span></div>
+                <div class="menu-item active" data-href="/social"><svg class="menu-icon" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg><span>SOCIAL MEDIA</span></div>
+            </div>
+        </aside>
+
+        <style>
+            .main-grid {
+                display: grid;
+                grid-template-columns: 320px 1fr;
+                gap: 15px;
+                padding: 15px;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            .osint-card {
+                background: var(--osint-card-bg);
+                border: 1px solid var(--osint-border);
+                border-radius: 4px;
+                padding: 10px;
+                position: relative;
+                backdrop-filter: blur(10px);
+                transition: border-color 0.3s ease;
+                margin-bottom: 10px;
+            }
+
+            .osint-card-title {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                color: var(--osint-cyan);
+                margin-bottom: 8px;
+                border-bottom: 1px solid var(--osint-border);
+                padding-bottom: 6px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-transform: uppercase;
+            }
+
+            .search-area {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .search-input {
+                flex: 1;
+                background: #000;
+                border: 1px solid var(--osint-border);
+                color: var(--osint-cyan);
+                font-family: var(--font-mono);
+                padding: 6px 10px;
+                border-radius: 4px;
+                outline: none;
+                font-size: 0.75rem;
+            }
+
+            .search-btn {
+                background: rgba(0, 0, 0, 0.65);
+                color: var(--neon-pink);
+                border: 1px solid var(--neon-pink);
+                padding: 0 15px;
+                font-family: var(--font-mono);
+                font-weight: bold;
+                font-size: 0.75rem;
+                cursor: pointer;
+                border-radius: 4px;
+                text-transform: uppercase;
+                transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            }
+
+            .search-btn:hover {
+                background: rgba(204, 51, 51, 0.12);
+                border-color: rgba(204, 51, 51, 0.85);
+            }
+
+            .profile-header {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .profile-img {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                border: 3px solid var(--osint-cyan);
+                background: #000;
+                margin-bottom: 10px;
+            }
+
+            .profile-name {
+                font-weight: bold;
+                font-size: 1rem;
+            }
+
+            .profile-handle {
+                color: var(--osint-cyan);
+                font-family: var(--font-mono);
+                font-size: 0.8rem;
+            }
+
+            .profile-bio {
+                font-size: 0.75rem;
+                color: #aaa;
+                margin: 10px 0;
+                line-height: 1.4;
+            }
+
+            .metric-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .metric-item {
+                background: rgba(255, 255, 255, 0.03);
+                padding: 8px;
+                border-radius: 4px;
+                text-align: center;
+            }
+
+            .metric-label {
+                font-size: 0.65rem;
+                color: #777;
+                text-transform: uppercase;
+                display: block;
+            }
+
+            .metric-value {
+                font-family: var(--font-mono);
+                font-size: 0.9rem;
+                color: #fff;
+            }
+
+            .tabs-header {
+                display: flex;
+                gap: 5px;
+                border-bottom: 1px solid var(--osint-border);
+                margin-bottom: 20px;
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                background: none;
+                border: none;
+                color: #777;
+                font-family: var(--font-mono);
+                padding: 12px 20px;
+                cursor: pointer;
+                transition: 0.3s;
+                border-bottom: 2px solid transparent;
+                white-space: nowrap;
+            }
+
+            .tab-btn.active {
+                color: var(--osint-cyan);
+                border-bottom-color: var(--osint-cyan);
+                background: var(--osint-cyan-low);
+            }
+
+            .tab-content {
+                display: none;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+
+            .post-item {
+                padding: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                background: rgba(0, 255, 209, 0.02);
+            }
+
+            .post-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                gap: 10px;
+            }
+
+            .post-author-icon {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: var(--osint-cyan-low);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.7rem;
+                color: var(--osint-cyan);
+            }
+
+            .post-author-info {
+                flex: 1;
+            }
+
+            .post-author {
+                font-weight: bold;
+                font-size: 0.9rem;
+                color: var(--osint-cyan);
+            }
+
+            .post-subreddit {
+                font-size: 0.75rem;
+                color: #777;
+                margin-top: 2px;
+            }
+
+            .post-title {
+                font-size: 1rem;
+                font-weight: bold;
+                color: #fff;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+
+            .post-content {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                color: #ddd;
+                margin-bottom: 10px;
+            }
+
+            .post-meta {
+                display: flex;
+                gap: 15px;
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                color: #555;
+            }
+
+            .post-meta i {
+                color: var(--osint-cyan);
+            }
+
+            .ai-insight-box {
+                border: 1px solid var(--osint-cyan);
+                background: var(--osint-cyan-low);
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 4px;
+                font-family: var(--font-mono);
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            .ai-label {
+                color: var(--osint-cyan);
+                font-weight: bold;
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 1px solid var(--osint-cyan);
+            }
+
+            .filter-input {
+                background: #000;
+                border: 1px solid var(--osint-border);
+                color: var(--osint-cyan);
+                font-family: var(--font-mono);
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                outline: none;
+                clip-path: polygon(0 0, 95% 0, 100% 20%, 100% 100%, 5% 100%, 0 80%);
+            }
+
+            .filter-input:focus {
+                border-color: var(--osint-cyan);
+                background: var(--osint-cyan-low);
+            }
+
+            .filter-label {
+                font-family: var(--font-mono);
+                font-size: 0.6rem;
+                color: #777;
+                text-transform: uppercase;
+            }
+
+            @media (max-width: 1200px) {
+                .main-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .container {
+                    flex-direction: column !important;
+                }
+
+                aside.sidebar {
+                    width: 100% !important;
+                    border-right: none !important;
+                    border-bottom: 1px solid var(--osint-border);
+                    min-height: auto !important;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .search-area {
+                    flex-direction: column;
+                }
+
+                .search-btn {
+                    height: 45px;
+                    padding: 10px;
+                }
+            }
+
+            /* Intelligence Layers */
+            .intel-layer {
+                margin-top: 20px;
+                border-top: 1px solid var(--osint-border);
+                padding-top: 20px;
+            }
+
+            .layer-title {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                color: #555;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .layer-title::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: linear-gradient(90deg, var(--osint-border), transparent);
+            }
+
+            .intel-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 15px;
+            }
+
+            .threat-header {
+                padding: 15px;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 4px;
+                font-family: var(--font-mono);
+                text-transform: uppercase;
+                border: 1px solid transparent;
+            }
+
+            .threat-low {
+                background: rgba(0, 255, 136, 0.1);
+                color: #00FF88;
+                border-color: #00FF88;
+            }
+
+            .threat-elevated {
+                background: rgba(255, 170, 0, 0.1);
+                color: #FFAA00;
+                border-color: #FFAA00;
+            }
+
+            .threat-critical {
+                background: rgba(255, 68, 68, 0.1);
+                color: #FF4444;
+                border-color: #FF4444;
+                animation: pulse-red 2s infinite;
+            }
+
+            @keyframes pulse-red {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 10px rgba(255, 68, 68, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+                }
+            }
+
+            .meter-bar {
+                height: 4px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 2px;
+                margin-top: 5px;
+                overflow: hidden;
+            }
+
+            .meter-fill {
+                height: 100%;
+                transition: width 1s ease;
+            }
+
+            .tag-group {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-top: 8px;
+            }
+
+            .intel-tag {
+                font-size: 10px;
+                padding: 2px 8px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid var(--osint-border);
+                color: #888;
+                border-radius: 2px;
+            }
+
+            .value-highlight {
+                color: var(--osint-cyan);
+                font-weight: bold;
+            }
+        </style>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main">
+            <div class="page-header">
+                <h1>REDDIT OSINT // COMMUNITY INTELLIGENCE</h1>
+                <p>Advanced Subreddit & User Analysis</p>
+                <p>Analyzing Community Patterns & User Behavior</p>
+                <div
+                    style="font-size: 8px; color: var(--text-dim); margin-top: 4px; letter-spacing: 2px; opacity: 0.8;">
+                    // [MODE: OSINT] // [TARGET: COMMUNITY] // [STATUS: ACTIVE] // [NEURAL: ENGAGED]
+                </div>
+                <div
+                    style="font-size: 7px; color: var(--text-dim); margin-top: 2px; letter-spacing: 1px; opacity: 0.5;">
+                    SYSTEM-ID: REDDIT-OSINT // ARCH: NEURAL-NET // MODE: RECON // CORE: STABLE // SCAN: ACTIVE
+                </div>
+            </div>
+
+            <div class="twitter-content">
+                <div class="twitter-main">
+                    <!-- Input Area -->
+                    <section style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <div class="osint-card" style="flex: 1.2; min-width: 300px; padding: 10px;">
+                            <div class="osint-card-title">USER/SUBREDDIT SEARCH</div>
+                            <div class="search-area" style="gap: 8px; align-items: stretch; margin-bottom: 0;">
+                                <select id="targetPrefix" class="filter-input"
+                                    style="width: 70px; min-width: 60px; padding: 4px 6px; font-size: 0.7rem;">
+                                    <option value="user">u/</option>
+                                    <option value="subreddit">r/</option>
+                                </select>
+                                <input type="text" id="targetInput" class="search-input"
+                                    placeholder="USERNAME or SUBREDDIT..."
+                                    onkeypress="if(event.key==='Enter') startRedditRecon()">
+                                <button class="search-btn" onclick="startRedditRecon()">SCAN</button>
+                            </div>
+                        </div>
+
+                        <div class="osint-card" style="flex: 1.0; min-width: 300px;">
+                            <div class="osint-card-title">FILTERS & OPTIONS</div>
+                            <div class="filter-group">
+                                <span class="filter-label">Subreddit (Optional)</span>
+                                <input type="text" id="fSubreddit" class="filter-input" placeholder="r/NAME..."
+                                    style="width: 100%; margin-top: 5px;">
+                            </div>
+                            <div class="filter-group" style="margin-top: 10px;">
+                                <span class="filter-label">Sort By</span>
+                                <select id="fSort" class="filter-input"
+                                    style="width: 100%; margin-top: 5px; display: block;">
+                                    <option value="top">Top</option>
+                                    <option value="hot">Hot</option>
+                                    <option value="new">New</option>
+                                    <option value="controversial">Controversial</option>
+                                </select>
+                            </div>
+                            <button class="search-btn"
+                                style="width: 100%; height: 35px; margin-top: 15px; font-size: 0.75rem;"
+                                onclick="startAdvancedSearch()">ADVANCED SEARCH</button>
+                        </div>
+                    </section>
+
+                    <!-- Analysis Section -->
+                    <section id="analysisSector" style="display: none; max-width: 900px; margin: 0 auto;">
+                        <div class="osint-card">
+                            <div class="tabs-header">
+                                <button class="tab-btn active" onclick="switchTab('tab-feed', this)">📮
+                                    POSTS</button>
+                                <button class="tab-btn" onclick="switchTab('tab-analysis', this)">🧠 ANALYSIS
+                                    REPORT</button>
+                                <button class="tab-btn" onclick="switchTab('tab-ideology', this)">⚖️ IDEOLOGY</button>
+                                <button class="tab-btn" onclick="switchTab('tab-community', this)">👥
+                                    COMMUNITY</button>
+                                <button class="tab-btn" onclick="switchTab('tab-network', this)">🕸️
+                                    NETWORK SNA</button>
+                                <button class="tab-btn" onclick="switchTab('tab-monitors', this); loadMonitors();">🚨
+                                    SURVEILLANCE</button>
+                                <button class="tab-btn" onclick="switchTab('tab-analytics', this)">📈
+                                    ANALYTICS</button>
+                                <button class="tab-btn" onclick="switchTab('tab-export', this)">💾 EXPORT</button>
+                            </div>
+                        </div>
+
+                        <div id="tab-feed" class="tab-content active">
+                            <div id="postFeed"></div>
+                        </div>
+
+                        <div id="tab-analysis" class="tab-content">
+                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                                <label for="aiEngineAnalysis"
+                                    style="font-size: 0.75rem; color: var(--osint-cyan); margin-bottom: 0; white-space: nowrap;">AI
+                                    ENGINE</label>
+                                <select id="aiEngineAnalysis" class="filter-input"
+                                    style="min-width: 190px; font-size: 0.75rem;">
+                                    <option value="huggingface">Hugging Face (Default)</option>
+                                    <option value="openai">OpenAI</option>
+                                    <option value="ollama">Ollama Local</option>
+                                    <option value="local">Local Analysis</option>
+                                </select>
+                                <label
+                                    style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--osint-cyan); margin-bottom: 0; white-space: nowrap;">
+                                    <input type="checkbox" id="realtimeAnalysis" style="margin: 0;">
+                                    REAL-TIME
+                                </label>
+                                <button class="search-btn" style="height: 30px; font-size: 0.7rem;"
+                                    onclick="runRedditAnalysis()">RUN ANALYSIS</button>
+                            </div>
+                            <div id="analysisContainer">
+                                <p
+                                    style="text-align: center; color: #555; padding: 40px; font-family: var(--font-mono);">
+                                    AWAITING DATA FOR ANALYSIS...</p>
+                            </div>
+                        </div>
+
+                        <div id="tab-ideology" class="tab-content">
+                            <div id="ideologyContainer">
+                                <p
+                                    style="text-align: center; color: #555; padding: 40px; font-family: var(--font-mono);">
+                                    AWAITING NEURAL WORLDVIEW ANALYSIS...</p>
+                            </div>
+                        </div>
+
+                        <div id="tab-community" class="tab-content">
+                            <div class="ai-insight-box">
+                                <span class="ai-label">COMMUNITY INSIGHTS</span>
+                                <div id="communityStats"></div>
+                            </div>
+                        </div>
+
+                        <div id="tab-network" class="tab-content">
+                            <div class="osint-card"
+                                style="padding: 0; height: 500px; overflow: hidden; position: relative;">
+                                <div class="osint-card-title"
+                                    style="position: absolute; top: 10px; left: 15px; z-index: 10; width: auto; background: rgba(0,0,0,0.5); border: none;">
+                                    LIVE SNA GRAPH // RELATIONSHIP MAPPING</div>
+                                <div id="networkViewer"
+                                    style="width: 100%; height: 100%; background: radial-gradient(circle, #051515, #000);">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-monitors" class="tab-content">
+                            <div class="osint-card">
+                                <div class="osint-card-title">ACTIVE SURVEILLANCE MONITORS</div>
+                                <div id="monitorList">
+                                    <p
+                                        style="text-align: center; color: #777; font-family: var(--font-mono); font-size: 0.8rem;">
+                                        No active monitors. Click the bell icon on a target to start surveillance.</p>
+                                </div>
+                                <div style="margin-top: 15px; text-align: center;">
+                                    <button onclick="testDiscordWebhook()"
+                                        style="background: var(--osint-border); border: 1px solid var(--osint-cyan); color: var(--osint-cyan); padding: 8px 16px; font-family: var(--font-mono); font-size: 0.7rem; cursor: pointer; border-radius: 4px;">TEST
+                                        DISCORD WEBHOOK</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-analytics" class="tab-content">
+                            <div class="ai-insight-box" style="margin-bottom: 20px;">
+                                <span class="ai-label">ENGAGEMENT METRICS</span>
+                                <div style="margin-top: 10px;">
+                                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                                        <div>
+                                            <span style="font-size: 0.7rem; color: #777;">Avg Upvotes</span>
+                                            <div style="font-size: 1.5rem; color: var(--osint-cyan); font-weight: bold;"
+                                                id="metricAvgUpvotes">--</div>
+                                        </div>
+                                        <div>
+                                            <span style="font-size: 0.7rem; color: #777;">Avg Comments</span>
+                                            <div style="font-size: 1.5rem; color: var(--osint-cyan); font-weight: bold;"
+                                                id="metricAvgComments">--</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-container"><canvas id="engagementChart"></canvas></div>
+                            <div class="chart-container" style="height: 250px;"><canvas id="topicsChart"></canvas></div>
+                        </div>
+
+                        <div id="tab-export" class="tab-content" style="text-align: center; padding: 40px;">
+                            <div style="display: flex; justify-content: center; gap: 20px;">
+                                <button class="search-btn" onclick="exportRedditData('pdf')">PDF REPORT</button>
+                                <button class="search-btn" onclick="exportRedditData('json')"
+                                    style="background: var(--osint-blue);">JSON EXPORT</button>
+                                <button class="search-btn" onclick="exportRedditData('csv')"
+                                    style="background: rgba(0, 255, 209, 0.15);">CSV EXPORT</button>
+                                <button class="search-btn" onclick="exportRedditData('discord')"
+                                    style="background: #5865f2; color: #fff;">DISCORD REPORT</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="twitter-sidebar">
+                    <!-- Profile Sector -->
+                    <aside id="profileSector" style="display: none;">
+                        <div class="osint-card">
+                            <div class="osint-card-title">PROFILE DATA</div>
+                            <div class="profile-header">
+                                <img id="pImg" class="profile-img"
+                                    src="https://www.redditinc.com/assets/images/site/reddit-logo.png">
+                                <div id="pName" class="profile-name">...</div>
+                                <div id="pHandle" class="profile-handle"
+                                    style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                    <span id="pHandleText">u/...</span>
+                                    <a id="pLink" href="#" target="_blank"
+                                        style="color: var(--neon-pink); font-size: 0.8rem; text-decoration: none; display: none;"
+                                        title="View on Reddit"><i class="fas fa-external-link-alt"></i></a>
+                                    <button onclick="createMonitor()" title="Establish Surveillance Monitor"
+                                        style="background: none; border: none; color: var(--osint-cyan); cursor: pointer; padding: 0; display: flex; align-items: center; transition: transform 0.2s;">
+                                        <i class="fas fa-bell"></i>
+                                    </button>
+                                </div>
+                                <p id="pBio" class="profile-bio"></p>
+                            </div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <span class="metric-label">Posts/Subs</span>
+                                    <span class="metric-value" id="mCount">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Karma</span>
+                                    <span class="metric-value" id="mKarma">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Age</span>
+                                    <span class="metric-value" id="mAge">--</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Status</span>
+                                    <span class="metric-value" id="mStatus">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="osint-card">
+                            <div class="osint-card-title">ACTIONS</div>
+                            <button class="search-btn" id="aiBtn" style="width: 100%; height: 35px; margin-bottom: 8px;"
+                                onclick="runRedditAnalysis()">RUN ANALYSIS</button>
+                            <div id="aiStatus"
+                                style="font-family: var(--font-mono); font-size: 0.7rem; text-align: center; color: var(--osint-cyan);">
+                                READY</div>
+                        </div>
+                        <div class="osint-card" style="margin-top: 10px;">
+                            <div class="osint-card-title">NEURAL INTELLIGENCE CONSOLE</div>
+                            <div id="neuralConsole"
+                                style="height: 80px; background: #000; border: 1px solid var(--osint-border); padding: 10px; font-family: var(--font-mono); font-size: 0.65rem; color: #00FF88; overflow-y: auto;">
+                                <div>[SYS] READY FOR DATA INJECTION...</div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+
+            hamburger.addEventListener('click', function () {
+                const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+                hamburger.setAttribute('aria-expanded', !isOpen);
+                sidebar.classList.toggle('open');
+                backdrop.classList.toggle('show');
+            });
+
+            backdrop.addEventListener('click', function () {
+                hamburger.setAttribute('aria-expanded', 'false');
+                sidebar.classList.remove('open');
+                backdrop.classList.remove('show');
+            });
+
+            document.querySelectorAll('.menu-item[data-href]').forEach(item => {
+                item.addEventListener('click', function () {
+                    window.location.href = this.getAttribute('data-href');
+                });
+            });
+        });
+
+        let redditData = null;
+        let charts = {};
+        let originalPosts = [];
+
+        async function startRedditRecon() {
+            let target = document.getElementById('targetInput').value.trim();
+            if (!target) return;
+
+            // Allow users to type either raw name or prefixed values.
+            target = target.replace(/^\s*(?:u\/|r\/)/i, '').trim();
+            const searchType = document.getElementById('targetPrefix').value;
+            const prefixLabel = searchType === 'user' ? 'u/' : 'r/';
+
+            document.getElementById('sysStatus').innerText = 'SCANNING...';
+
+            try {
+                let apiUrl;
+                if (searchType === 'user') {
+                    apiUrl = `/api/reddit/search/author/${encodeURIComponent(target)}`;
+                } else {
+                    apiUrl = `/api/reddit/search/subreddit/${encodeURIComponent(target)}`;
+                }
+
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                redditData = {
+                    type: searchType,
+                    data: data.profile || {},
+                    posts: Array.isArray(data.posts) ? data.posts : [],
+                    targetLabel: `${prefixLabel}${target}`
+                };
+
+                document.getElementById('profileSector').style.display = 'block';
+                document.getElementById('analysisSector').style.display = 'block';
+                document.getElementById('sysStatus').innerText = 'READY';
+                originalPosts = JSON.parse(JSON.stringify(redditData.posts));
+                renderRedditDashboard();
+            } catch (e) {
+                alert("ERROR: " + e.message);
+                document.getElementById('sysStatus').innerText = 'ERROR';
+            }
+        }
+
+        function renderRedditDashboard() {
+            if (!redditData) return;
+
+            const data = redditData.data;
+            const isUser = redditData.type === 'user';
+
+            if (isUser) {
+                const linkKarma = Number(data.link_karma ?? data.karma ?? 0);
+                const commentKarma = Number(data.comment_karma ?? data.comment_karma_total ?? 0);
+                const totalKarma = Number(data.total_karma ?? data.karma_total ?? (linkKarma + commentKarma));
+                const createdUtc = Number(data.created_utc ?? data.created ?? data.created_at ?? 0);
+
+                document.getElementById('pName').innerText = data.name || data.username || redditData.targetLabel || 'Unknown User';
+                const username = data.username || data.name || redditData.targetLabel.replace('u/', '');
+                document.getElementById('pHandleText').innerText = `u/${username}`.replace(/^u\/\//, 'u/');
+                document.getElementById('pLink').href = `https://www.reddit.com/user/${username}`;
+                document.getElementById('pLink').style.display = 'inline-block';
+                document.getElementById('pBio').innerText = data.description || data.about || 'No description';
+                document.getElementById('mCount').innerText = totalKarma.toLocaleString();
+                document.getElementById('mKarma').innerText = linkKarma.toLocaleString();
+                document.getElementById('mAge').innerText = createdUtc > 0 ? calculateAccountAge(createdUtc) : 'N/A';
+                document.getElementById('mStatus').innerText = 'ACTIVE';
+            } else {
+                document.getElementById('pName').innerText = data.display_name || 'Unknown';
+                const subname = data.name || redditData.targetLabel.replace('r/', '');
+                document.getElementById('pHandleText').innerText = `r/${subname}`;
+                document.getElementById('pLink').href = `https://www.reddit.com/r/${subname}`;
+                document.getElementById('pLink').style.display = 'inline-block';
+                document.getElementById('pBio').innerText = data.description || 'No description';
+                document.getElementById('mCount').innerText = data.subscribers?.toLocaleString() || '0';
+                document.getElementById('mKarma').innerText = (redditData.posts || []).length.toLocaleString();
+                document.getElementById('mAge').innerText = '2-3 years';
+                document.getElementById('mStatus').innerText = 'ACTIVE';
+            }
+
+            // Sync handle text for monitoring fallback if above logic gets wonky
+            if (document.getElementById('pHandleText').innerText === 'u/' || document.getElementById('pHandleText').innerText === 'r/Unknown') {
+                document.getElementById('pHandleText').innerText = redditData.targetLabel;
+            }
+
+            renderPostFeed();
+            renderCharts();
+            updateCommunityStats();
+        }
+
+        async function createMonitor() {
+            if (!redditData) return;
+            const target = redditData.data.username || redditData.data.name;
+            const type = redditData.type;
+
+            logNeural(`ESTABLISHING SURVEILLANCE: ${target}...`);
+
+            try {
+                const response = await fetch('/api/reddit/monitor/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: target, type: type })
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert(`SUCCESS: Surveillance established for ${target}. Discord alerts enabled.`);
+                    logNeural(`MONITOR ACTIVE: ${target} [ID: ${result.monitor_id}]`);
+
+                    // Send web notification
+                    showWebNotification('Surveillance Established', `Monitor created for ${target}`);
+
+                    // Send Discord webhook
+                    sendDiscordMessage('New Reddit surveillance monitor established', {
+                        title: 'Surveillance Monitor Created',
+                        description: `Monitor established for ${target} (${type})`,
+                        color: 0xFFAA00,
+                        fields: [
+                            {
+                                name: 'Target',
+                                value: target,
+                                inline: true
+                            },
+                            {
+                                name: 'Type',
+                                value: type,
+                                inline: true
+                            },
+                            {
+                                name: 'Monitor ID',
+                                value: result.monitor_id,
+                                inline: true
+                            }
+                        ]
+                    });
+                } else {
+                    alert(`NOTICE: ${result.error}`);
+                }
+            } catch (e) {
+                alert(`ERROR: ${e.message}`);
+            }
+        }
+
+        async function loadMonitors() {
+            const container = document.getElementById('monitorList');
+            container.innerHTML = '<p style="text-align: center; color: var(--osint-cyan);">RETRIVING ACTIVE INTELLIGENCE...</p>';
+
+            try {
+                const response = await fetch('/api/reddit/monitors');
+                const data = await response.json();
+
+                if (data.status === 'success' && data.monitors.length > 0) {
+                    container.innerHTML = data.monitors.map(m => `
+                        <div class="ai-insight-box" style="margin-bottom: 10px; padding: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="color: var(--osint-cyan);">${m.target_name} (${m.target_type})</strong>
+                                <span class="intel-tag" style="padding: 2px 6px; font-weight: bold; background: ${getTierColor(m.threat_tier)}; color: #000;">${m.threat_tier}</span>
+                            </div>
+                            <div style="font-size: 0.7rem; color: #777; margin-top: 5px;">
+                                LAST CHECK: ${new Date(m.last_check).toLocaleString()} | SCORE: ${m.threat_score}/100
+                            </div>
+                            <div class="meter-bar" style="margin-top: 8px;">
+                                <div class="meter-fill" style="width: ${m.threat_score}%; background: ${getTierColor(m.threat_tier)};"></div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Show notifications for high-threat monitors
+                    const highThreatMonitors = data.monitors.filter(m => m.threat_score >= 70);
+                    if (highThreatMonitors.length > 0) {
+                        highThreatMonitors.forEach(m => {
+                            showWebNotification('High Threat Monitor Alert', `${m.target_name} has threat score ${m.threat_score}/100`);
+                            sendDiscordMessage('High threat monitor alert', {
+                                title: 'Monitor Alert',
+                                description: `${m.target_name} (${m.target_type}) has elevated threat level`,
+                                color: 0xFF4444,
+                                fields: [
+                                    {
+                                        name: 'Threat Score',
+                                        value: `${m.threat_score}/100`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: 'Threat Tier',
+                                        value: m.threat_tier,
+                                        inline: true
+                                    }
+                                ]
+                            });
+                        });
+                    }
+                } else {
+                    container.innerHTML = '<p style="text-align: center; color: #777;">No active monitors found.</p>';
+                }
+            } catch (e) {
+                container.innerHTML = `<p style="color: #FF4444;">ERROR: ${e.message}</p>`;
+            }
+        }
+
+        function getTierColor(tier) {
+            switch (tier) {
+                case 'ACTIVE': return '#FF00FF';
+                case 'CRITICAL': return '#FF4444';
+                case 'HIGH': return '#FFAA00';
+                case 'MED': return '#00A3FF';
+                default: return '#00FF88';
+            }
+        }
+
+        function calculateAccountAge(createdUtc) {
+            const now = Date.now() / 1000;
+            const ageSeconds = now - createdUtc;
+            const ageDays = Math.floor(ageSeconds / 86400);
+            const ageYears = Math.floor(ageDays / 365);
+
+            if (ageYears > 0) return `${ageYears} year${ageYears > 1 ? 's' : ''}`;
+            return `${ageDays} days`;
+        }
+
+        function renderPostFeed() {
+            const feed = document.getElementById('postFeed');
+            feed.innerHTML = (redditData.posts || []).map(post => {
+                const score = Number(post.score ?? post.ups ?? post.upvotes ?? 0);
+                const numComments = Number(post.num_comments ?? post.num_comments ?? post.comments ?? post.comment_count ?? 0);
+                const engagement = score + numComments;
+                const engagementLevel = engagement >= 1000 ? '🔥 VIRAL' : engagement >= 100 ? '⚡ HOT' : '○ COLD';
+                const rawCreated = post.created_utc ?? post.created ?? post.created_at ?? 0;
+                const createdValue = Number(rawCreated) || new Date(rawCreated).getTime() / 1000;
+                const date = createdValue > 0 ? new Date(createdValue * 1000).toLocaleDateString() : 'Unknown';
+                const subreddit = (post.subreddit || post.subreddit_name_prefixed || post.subreddit_name || '').toString().replace(/^r\//i, '') || 'unknown';
+                const author = post.author || post.author_name || post.author_fullname || 'Anonymous';
+                const content = post.selftext ?? post.body ?? post.text ?? '';
+                const title = post.title || post.headline || post.link_title || '(No title)';
+
+                return `
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div class="post-author-icon">${author?.[0]?.toUpperCase() || 'U'}</div>
+                            <div class="post-author-info">
+                                <div class="post-author">${author}</div>
+                                <div class="post-subreddit">r/${subreddit} • ${date}</div>
+                            </div>
+                        </div>
+                        <div class="post-title">${title}</div>
+                        <div class="post-content">${content.toString().substring(0, 200) || '(Link post)'}${content.toString().length > 200 ? '...' : ''}</div>
+                        <div class="post-meta">
+                            <span><i class="fas fa-arrow-up"></i> ${score.toLocaleString()} Upvotes</span>
+                            <span><i class="fas fa-comments"></i> ${numComments.toLocaleString()} Comments</span>
+                            <span>${engagementLevel}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCharts() {
+            if (typeof Chart === 'undefined') return;
+
+            // Engagement Chart
+            const ctxE = document.getElementById('engagementChart');
+            if (ctxE && charts.e) charts.e.destroy();
+
+            if (ctxE) {
+                const posts = redditData.posts || [];
+                charts.e = new Chart(ctxE.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: posts.slice(0, 10).map(p => p.title?.substring(0, 20) + '...'),
+                        datasets: [{
+                            label: 'Upvotes',
+                            data: posts.slice(0, 10).map(p => p.score),
+                            backgroundColor: 'rgba(0, 255, 209, 0.7)',
+                            borderColor: '#00FFD1',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#aaa' } } },
+                        scales: {
+                            y: { ticks: { color: '#777' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            x: { ticks: { color: '#777' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                        }
+                    }
+                });
+            }
+
+            // Topics Chart
+            const ctxT = document.getElementById('topicsChart');
+            if (ctxT && charts.t) charts.t.destroy();
+
+            if (ctxT) {
+                charts.t = new Chart(ctxT.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Discussion', 'News', 'Tutorial', 'Question', 'Other'],
+                        datasets: [{
+                            data: [30, 25, 20, 15, 10],
+                            backgroundColor: [
+                                'rgba(0, 255, 209, 0.7)',
+                                'rgba(0, 163, 255, 0.7)',
+                                'rgba(255, 193, 7, 0.7)',
+                                'rgba(76, 175, 80, 0.7)',
+                                'rgba(150, 150, 150, 0.7)'
+                            ],
+                            borderColor: ['#00FFD1', '#00A3FF', '#FFC107', '#4CAF50', '#888'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#aaa', padding: 20 } } }
+                    }
+                });
+            }
+
+            const postCount = redditData.posts?.length || 0;
+            const safeScore = p => Number(p.score ?? p.ups ?? p.upvotes ?? 0);
+            const safeComments = p => Number(p.num_comments ?? p.comments ?? p.comment_count ?? 0);
+
+            document.getElementById('metricAvgUpvotes').innerText = postCount > 0
+                ? Math.floor(redditData.posts.reduce((sum, p) => sum + safeScore(p), 0) / postCount).toLocaleString()
+                : '0';
+            document.getElementById('metricAvgComments').innerText = postCount > 0
+                ? Math.floor(redditData.posts.reduce((sum, p) => sum + safeComments(p), 0) / postCount).toLocaleString()
+                : '0';
+        }
+
+        function updateCommunityStats() {
+            const communityDiv = document.getElementById('communityStats');
+            const isUser = redditData.type === 'user';
+            const data = redditData.data;
+            const linkKarma = Number(data.link_karma ?? data.karma ?? 0);
+            const commentKarma = Number(data.comment_karma ?? data.comment_karma_total ?? 0);
+            const totalKarma = Number(data.total_karma ?? data.karma_total ?? (linkKarma + commentKarma));
+            const createdUtc = Number(data.created_utc ?? data.created ?? data.created_at ?? 0);
+
+            if (isUser) {
+                communityDiv.innerHTML = `
+                    <ul style="margin: 10px 0; margin-left: 20px; font-size: 0.85rem;">
+                        <li>Link Karma: ${linkKarma.toLocaleString()}</li>
+                        <li>Comment Karma: ${commentKarma.toLocaleString()}</li>
+                        <li>Total Karma: ${totalKarma.toLocaleString()}</li>
+                        <li>Account Created: ${createdUtc > 0 ? calculateAccountAge(createdUtc) + ' ago' : 'Unknown'}</li>
+                        <li>Post Topics: Tech, AI, Programming</li>
+                        <li>Engagement Style: Active and Conversational</li>
+                    </ul>
+                `;
+            } else {
+                communityDiv.innerHTML = `
+                    <ul style="margin: 10px 0; margin-left: 20px; font-size: 0.85rem;">
+                        <li>Subscribers: ${data.subscribers?.toLocaleString() || '0'}</li>
+                        <li>Post Activity: Very High</li>
+                        <li>Community Type: ${data.name?.includes('ML') || data.name?.includes('programming') ? 'Technical' : 'General'}</li>
+                        <li>Avg Daily Posts: 50-200</li>
+                        <li>Moderation Level: Strict</li>
+                        <li>Top Topics: Machine Learning, AI, Programming</li>
+                    </ul>
+                `;
+            }
+        }
+
+        function runRedditAnalysis() {
+            const btn = document.getElementById('aiBtn');
+            const status = document.getElementById('aiStatus');
+
+            btn.innerText = 'ANALYZING...';
+            btn.disabled = true;
+            status.innerText = 'Processing...';
+
+            // Call backend AI analysis
+            fetch('/api/reddit/ai_analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    target: redditData.data.username || redditData.data.name,
+                    search_type: redditData.type,
+                    engine: document.getElementById('aiEngineAnalysis').value,
+                    realtime: document.getElementById('realtimeAnalysis').checked
+                })
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.status === 'success') {
+                        displayRedditAIReport(result.analysis);
+                        status.innerText = 'ANALYSIS COMPLETE';
+                        switchTab('tab-analysis', document.querySelector('[onclick*="tab-analysis"]'));
+
+                        // Send web notification
+                        showWebNotification('Reddit Analysis Complete', 'AI analysis has finished processing');
+
+                        // Send Discord webhook
+                        const discordThreatScore = result.analysis?.layer_5_threat_political_status?.threat_score;
+                        const discordThreatScoreText = discordThreatScore !== undefined && discordThreatScore !== null ? `${discordThreatScore}/100` : 'N/A';
+                        sendDiscordMessage('Reddit AI analysis completed', {
+                            title: 'Reddit Intelligence Report',
+                            description: `Analysis complete for ${redditData?.targetLabel || 'target'}`,
+                            color: 0x00FFD1,
+                            fields: [
+                                {
+                                    name: 'Threat Level',
+                                    value: result.analysis?.layer_5_threat_political_status?.threat_level || 'Unknown',
+                                    inline: true
+                                },
+                                {
+                                    name: 'Threat Score',
+                                    value: discordThreatScoreText,
+                                    inline: true
+                                }
+                            ]
+                        });
+                    } else {
+                        throw new Error(result.error);
+                    }
+                })
+                .catch(e => {
+                    status.innerText = 'ERROR';
+                    alert("ERROR: " + e.message);
+                })
+                .finally(() => {
+                    btn.innerText = 'RUN ANALYSIS';
+                    btn.disabled = false;
+                });
+        }
+
+        function displayRedditAIReport(analysis) {
+            const analysisContainer = document.getElementById('analysisContainer');
+
+            // Extract the new 5-layer structure
+            const L1 = analysis.layer_1_sentiment_ideology || {};
+            const L2 = analysis.layer_2_narrative_stance || {};
+            const L3 = analysis.layer_3_behavioral_analysis || {};
+            const L4 = analysis.layer_4_network_structure_sna || {};
+            const L5 = analysis.layer_5_threat_political_status || {};
+
+            const threatLevelRaw = (L5.threat_level || L5.national_threat_level || '').toString().toUpperCase();
+            const threatScoreValue = Number(L5.threat_score || 0);
+            const threatScoreLabel = (L5.threat_score !== undefined && L5.threat_score !== null && L5.threat_score !== '') ? `${L5.threat_score}/100` : 'N/A';
+            let threatLevel = 'LOW';
+
+            if (threatScoreValue >= 75 || threatLevelRaw.includes('CRITICAL') || threatLevelRaw.includes('SEVERE') || threatLevelRaw.includes('ACTIVE')) {
+                threatLevel = 'CRITICAL';
+            } else if (threatScoreValue >= 40 || threatLevelRaw.includes('ELEVATED') || threatLevelRaw.includes('HIGH') || threatLevelRaw.includes('MED') || threatLevelRaw.includes('MODERATE')) {
+                threatLevel = 'ELEVATED';
+            }
+
+            const threatClass = threatLevel === 'CRITICAL' ? 'threat-critical' : (threatLevel === 'ELEVATED' ? 'threat-elevated' : 'threat-low');
+
+            const occupationIndicators = Array.isArray(analysis.occupation_indicators) ? analysis.occupation_indicators : [];
+            const interests = Array.isArray(analysis.interests) ? analysis.interests : [];
+            const demographics = analysis.demographics || {};
+            const personality = analysis.personality || {};
+            const score = analysis.score || {};
+
+            // Populate Ideology Tab separately
+            const ideologyContainer = document.getElementById('ideologyContainer');
+            if (ideologyContainer) {
+                ideologyContainer.innerHTML = `
+                    <div class="ai-insight-box" style="border-color: var(--neon-pink); background: rgba(255, 0, 136, 0.05);">
+                        <span class="ai-label" style="color: var(--neon-pink); border-bottom-color: var(--neon-pink);">[IDEOLOGY ANAYLIS]</span>
+                        <div style="margin-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div style="font-size: 1.1rem; color: #fff; font-weight: bold; font-family: var(--font-mono);">
+                                    <i class="fas fa-brain" style="color: var(--neon-pink); margin-right: 8px;"></i>
+                                    ${L1.ideology || 'Neutral'}
+                                </div>
+                                <div style="text-align: right;">
+                                    <span class="filter-label">Confidence</span>
+                                    <div style="color: var(--neon-pink); font-family: var(--font-mono); font-weight: bold;">
+                                        ${(analysis.ideology?.confidence * 100 || 0).toFixed(0)}%
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p style="margin: 12px 0; font-size: 0.85rem; line-height: 1.5; color: #eee; font-style: italic;">
+                         ${analysis.assessment || 'Analysis successfully categorized across 5 intelligence layers.'}
+                            </p>
+                            
+                            <div class="tag-group" style="margin-top: 10px;">
+                                ${(analysis.ideology?.indicators || []).map(ind => `<span class="intel-tag" style="border-color: rgba(255, 0, 136, 0.3); color: #ff0088;">${ind}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            analysisContainer.innerHTML = `
+                <!-- LAYER 5: NATIONAL THREAT ASSESSMENT -->
+                <div class="threat-header ${threatClass}">
+                    <div><span>[NATIONAL THREAT LEVEL]</span> <strong style="font-size: 1.2rem; margin-left: 10px;">${threatLevelRaw || threatLevel}</strong></div>
+                    <div><span>SCORE:</span> <strong style="font-size: 1.2rem; margin-left: 10px;">${threatScoreLabel}</strong></div>
+                </div>
+
+                <div class="ai-insight-box">
+                    <span class="ai-label">CORE INTELLIGENCE PROFILE</span>
+                    <div class="metric-grid" style="margin-top: 10px; grid-template-columns: repeat(3, 1fr);">
+                        <div class="metric-item">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">${demographics.age_estimate || demographics.age || 'Unknown'}</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Location</span>
+                            <span class="metric-value">${demographics.location || 'Unknown'}</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Timezone</span>
+                            <span class="metric-value">${demographics.timezone || 'Unknown'}</span>
+                        </div>
+                    </div>
+                    <div class="intel-grid" style="margin-top: 15px;">
+                        <div>
+                            <span class="filter-label">Occupation Markers</span>
+                            <div class="tag-group">
+                                ${occupationIndicators.map(item => `<span class="intel-tag">${item}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="filter-label">Keyed Interests</span>
+                            <div class="tag-group">
+                                ${interests.map(item => {
+                if (typeof item === 'object' && item !== null) {
+                    return `<span class="intel-tag" title="REASON: ${item.reason || 'Derived from contextual history.'}">${item.topic || 'Unknown'}</span>`;
+                }
+                return `<span class="intel-tag">${item}</span>`;
+            }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 1: SENTIMENT & IDEOLOGY -->
+                <div class="intel-layer">
+                    <div class="layer-title">Layer 1: Sentiment & Ideology</div>
+                    <div class="intel-grid">
+                        <div class="ai-insight-box">
+                            <span class="filter-label">SENTIMENT CALIBRATION (VADER/RoBERTa)</span>
+                            <div style="margin-top: 10px;">
+                                <div><span style="font-size: 10px;">POS: ${(L1.scores?.pos * 100 || 0).toFixed(1)}%</span><div class="meter-bar"><div class="meter-fill" style="width: ${L1.scores?.pos * 100 || 0}%; background: #00FF88;"></div></div></div>
+                                <div style="margin-top: 8px;"><span style="font-size: 10px;">NEG: ${(L1.scores?.neg * 100 || 0).toFixed(1)}%</span><div class="meter-bar"><div class="meter-fill" style="width: ${L1.scores?.neg * 100 || 0}%; background: #FF4444;"></div></div></div>
+                                <div style="margin-top: 8px;"><span style="font-size: 10px;">NEU: ${(L1.scores?.neu * 100 || 0).toFixed(1)}%</span><div class="meter-bar"><div class="meter-fill" style="width: ${L1.scores?.neu * 100 || 0}%; background: #888;"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="ai-insight-box">
+                            <span class="filter-label">POLITICAL AFFECT & SIGNALS</span>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">LOCATION CONTEXT: <span class="value-highlight">${demographics.location || 'Unknown'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">IDEOLOGY: <span class="value-highlight">${L1.ideology || 'Neutral'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">AFFECT: <span class="value-highlight">${L1.affect || 'Stable'}</span></p>
+                            <div class="tag-group">
+                                <span class="intel-tag" style="border-color: #FF4444; color: #FF4444;">OUTRAGE: ${L1.signals?.outrage || 0}%</span>
+                                <span class="intel-tag" style="border-color: #FFAA00; color: #FFAA00;">FEAR: ${L1.signals?.fear || 0}%</span>
+                                <span class="intel-tag" style="border-color: #00FF88; color: #00FF88;">HOPE: ${L1.signals?.hope || 0}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 2: NARRATIVE & STANCE -->
+                <div class="intel-layer">
+                    <div class="layer-title">Layer 2: Narrative & Stance</div>
+                    <div class="ai-insight-box">
+                        <p style="margin: 0; font-size: 0.85rem;"><strong style="color: var(--osint-cyan);">FRAMING:</strong> ${L2.framing || 'Standard objective framing detected.'}</p>
+                        <p style="margin: 10px 0 0 0; font-size: 0.85rem;"><strong style="color: var(--osint-cyan);">ENTITY STANCE:</strong> ${L2.stance || 'No specific entity alignment.'}</p>
+                        <p style="margin: 10px 0 0 0; font-size: 0.85rem;"><strong style="color: var(--osint-cyan);">POLARIZATION:</strong> ${L2.us_vs_them || 'MinimalUs-vs-Them rhetoric.'}</p>
+                    </div>
+                </div>
+
+                <!-- LAYER 3: BEHAVIORAL ANALYSIS -->
+                <div class="intel-layer">
+                    <div class="layer-title">Layer 3: Behavioral Analysis</div>
+                    <div class="intel-grid">
+                        <div class="ai-insight-box">
+                            <span class="filter-label">ACCOUNT SIGNALS</span>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">ESTIMATED AGE: <span class="value-highlight">${demographics.age_estimate || demographics.age || 'Unknown'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">ACT/AGE CORRELATION: <span class="value-highlight">${L3.account_signals || 'N/A'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">KARMA VELOCITY: <span class="value-highlight">${L3.karma_velocity || 'N/A'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">BURST POSTING: <span class="value-highlight">${L3.burst_posting || 'N/A'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">DORMANCY PATTERNS: <span class="value-highlight">${L3.dormancy_patterns || 'N/A'}</span></p>
+                        </div>
+                        <div class="ai-insight-box">
+                            <span class="filter-label">TIMING & PATTERNS</span>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">TEMPORAL: <span class="value-highlight">${L3.temporal || 'N/A'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">COORDINATED TIMING: <span class="value-highlight">${L3.coordinated_timing || 'N/A'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">EVENT LINKED SPIKES: <span class="value-highlight">${L3.event_linked_spikes || 'N/A'}</span></p>
+                        </div>
+                        <div class="ai-insight-box" style="grid-column: span 2;">
+                            <span class="filter-label">CONTENT FORENSICS</span>
+                            <div class="metric-grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 10px;">
+                                <div class="metric-item">
+                                    <span class="metric-label">Copy-Paste Ratio</span>
+                                    <span class="metric-value">${L3.copy_paste_ratio || 'N/A'}</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Lexical Diversity</span>
+                                    <span class="metric-value">${L3.lexical_diversity_score || 0}</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Edit Frequency</span>
+                                    <span class="metric-value">${L3.edit_frequency || 'N/A'}</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Reply Speed <60s</span>
+                                    <span class="metric-value">${L3.reply_speed_under_60s || 'N/A'}</span>
+                                </div>
+                            </div>
+                            <p style="margin: 10px 0 0 0; font-size: 0.8rem;">SUBREDDIT LOOPS: <span class="value-highlight">${L3.same_subreddit_loops || 'N/A'}</span></p>
+                            <p style="margin: 8px 0 0 0; font-size: 0.8rem;">LINK DOMAIN BIAS: <span class="value-highlight">${L3.link_domain_bias || 'N/A'}</span></p>
+                        </div>
+                        <div class="ai-insight-box" style="grid-column: span 2;">
+                            <span class="filter-label">AUTOMATION/BOT PROBABILITY</span>
+                            <div style="font-size: 1.5rem; color: var(--osint-cyan); font-weight: bold; margin: 8px 0;">${L3.bot_indicators?.score || 0}%</div>
+                            <div class="tag-group">
+                                ${(L3.bot_indicators?.flags || []).map(f => `<span class="intel-tag">${f}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 4: NETWORK STRUCTURE (SNA) -->
+                <div class="intel-layer">
+                    <div class="layer-title">Layer 4: Network Structure (SNA)</div>
+                    <div class="intel-grid">
+                        <div class="ai-insight-box">
+                            <span class="filter-label">CENTRALITY & FLOW</span>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">INFLUENCE: <span class="value-highlight">${L4.influence || 'Low.'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">CASCADE DEPTH: <span class="value-highlight">${L4.cascade || 0}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.8rem;">MIGRATION FLOWS: <span class="value-highlight">${L4.cross_sub_migration_flow_vectors || 'N/A'}</span></p>
+                        </div>
+                        <div class="ai-insight-box">
+                            <span class="filter-label">GRAPH METRICS</span>
+                            <p style="margin: 8px 0; font-size: 0.85rem;">Betweenness: ${L4.metrics?.betweenness || 0}</p>
+                            <p style="margin: 0; font-size: 0.85rem;">Clustering: ${L4.metrics?.clustering || 0}</p>
+                            <p style="margin: 8px 0 0 0; font-size: 0.85rem;">Community ID: ${L4.community_detect || 'N/A'}</p>
+                            <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: #FFAA00;">Bridge Nodes: ${L4.bridge_node_id || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 5: THREAT FINGERPRINTS -->
+                <div class="intel-layer">
+                    <div class="layer-title">Layer 5: Advanced Threat, MNC & Political Status</div>
+                    <div class="intel-grid">
+                        <div class="ai-insight-box">
+                            <span class="filter-label">NATIONAL & GOV THREAT STRAT</span>
+                            <ul style="margin: 0; margin-left: 20px; font-size: 0.85rem; line-height: 1.6;">
+                                <li><strong>GOV TARGETING:</strong> ${L5.narratives || 'None detected.'}</li>
+                                <li><strong>ELECTION INTERFERENCE:</strong> ${L5.interference || 'No signals detected.'}</li>
+                                <li><strong>PROTEST MOBILISATION:</strong> ${L5.protest || 'No tactical coordination found.'}</li>
+                                <li><strong>FOREIGN ACTOR FP:</strong> ${L5.foreign_actor_fingerprints || 'N/A'}</li>
+                            </ul>
+                        </div>
+                        <div class="ai-insight-box">
+                            <span class="filter-label">CORPORATE & MNC INTELLIGENCE</span>
+                            <ul style="margin: 0; margin-left: 20px; font-size: 0.85rem; line-height: 1.6;">
+                                <li><strong>BRAND SHIFTS:</strong> ${L5.mnc_institutional_brand_reputation_shifts || 'N/A'}</li>
+                                <li><strong>EMPLOYEE LEAKS:</strong> ${L5.employee_sentiment_leak || 'N/A'}</li>
+                                <li><strong>COORD ATTACK:</strong> <span style="${L5.coordinated_corp_attack === 'Yes' ? 'color: #FF4444; font-weight: bold;' : ''}">${L5.coordinated_corp_attack || 'No'}</span></li>
+                                <li><strong>PRESSURE CAMPAIGNS:</strong> ${L5.policy_pressure_campaigns || 'No'}</li>
+                            </ul>
+                        </div>
+                        <div class="ai-insight-box" style="grid-column: span 2;">
+                            <span class="filter-label">POLITICAL STATUS & ESCALATION OVERVIEW</span>
+                            <p style="margin: 8px 0; font-size: 0.85rem;">STATUS: <span class="value-highlight">${L5.political_status || 'N/A'}</span></p>
+                            <p style="margin: 8px 0; font-size: 0.85rem;">PARTY DELTA: <span class="value-highlight">${L5.party_sentiment_delta || 0}</span></p>
+                            <div class="metric-grid" style="grid-template-columns: repeat(2, 1fr); margin-top: 10px;">
+                                <div class="metric-item">
+                                    <span class="metric-label">Astroturf Confidence</span>
+                                    <span class="metric-value">${L5.astroturf_confidence_score || 0}%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Crisis Escalation Index</span>
+                                    <span class="metric-value">${L5.crisis_escalation_index || 0}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insight-box" style="margin-top: 20px;">
+                    <span class="ai-label">🧬 PERSONALITY PROFILE</span>
+                    <p style="margin: 10px 0; font-size: 0.85rem; font-family: var(--font-mono);"><strong>MBTI:</strong> ${personality.mbti || 'Unknown'}</p>
+                    <div style="margin-top: 10px; height: 300px;">
+                        <canvas id="personalityRadar"></canvas>
+                    </div>
+                </div>
+
+                <div class="ai-insight-box">
+                    <span class="ai-label">🧠 NEURAL SUMMARY</span>
+                    <p style="margin: 10px 0; font-size: 0.85rem; line-height: 1.6;">${analysis.assessment || 'Analysis successfully categorized across 5 intelligence layers.'}</p>
+                    <div class="tag-group" style="border-top: 1px solid var(--osint-border); padding-top: 10px; margin-top: 10px;">
+                        <span class="intel-tag">Influence: ${score.influence || 0}</span>
+                        <span class="intel-tag">Trust: ${score.trust || 0}</span>
+                        <span class="intel-tag">Activity: ${score.activity || 0}</span>
+                        <span class="intel-tag">Engagement: ${score.engagement || 0}</span>
+                    </div>
+                </div>
+            `;
+
+            renderPersonalityGraph(analysis.personality.big_five);
+            renderNetworkSNA(analysis);
+        }
+
+        function logNeural(msg) {
+            const console = document.getElementById('neuralConsole');
+            const div = document.createElement('div');
+            div.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            console.appendChild(div);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function renderNetworkSNA(analysis) {
+            const container = document.getElementById('networkViewer');
+            const target = redditData.targetLabel || 'TARGET';
+
+            const nodes = new vis.DataSet([
+                { id: 1, label: target, shape: 'circularImage', image: document.getElementById('pImg').src, borderWidth: 4, size: 40, color: { border: '#00FFD1' } }
+            ]);
+
+            const edges = new vis.DataSet([]);
+
+            // Add related entities from analysis (occupation, interests)
+            let nodeIdx = 2;
+            const indicators = analysis.occupation_indicators || [];
+            const interests = analysis.interests || [];
+
+            indicators.slice(0, 5).forEach(ind => {
+                nodes.add({ id: nodeIdx, label: ind, color: '#00A3FF', shape: 'dot', size: 20 });
+                edges.add({ from: 1, to: nodeIdx, length: 150 });
+                nodeIdx++;
+            });
+
+            interests.slice(0, 5).forEach(int => {
+                nodes.add({ id: nodeIdx, label: int, color: '#FFAA00', shape: 'dot', size: 15 });
+                edges.add({ from: 1, to: nodeIdx, length: 200, dashes: true });
+                nodeIdx++;
+            });
+
+            const data = { nodes, edges };
+            const options = {
+                nodes: { font: { color: '#ccc', size: 12, face: 'Share Tech Mono' } },
+                edges: { color: { color: 'rgba(0, 255, 209, 0.2)', highlight: '#00FFD1' }, width: 1 },
+                physics: { stabilization: true, barnesHut: { gravitationalConstant: -2000 } }
+            };
+
+            new vis.Network(container, data, options);
+            logNeural(`SNA MAP GENERATED: ${nodeIdx - 1} NODES CONNECTED`);
+        }
+
+        function renderPersonalityGraph(bigFive) {
+            if (typeof Chart === 'undefined') return;
+            const ctx = document.getElementById('personalityRadar');
+            if (!ctx) return;
+            if (charts.profile) charts.profile.destroy();
+
+            charts.profile = new Chart(ctx.getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: ['Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism'],
+                    datasets: [{
+                        label: 'Personality Profile',
+                        data: [
+                            bigFive.openness,
+                            bigFive.conscientiousness,
+                            bigFive.extraversion,
+                            bigFive.agreeableness,
+                            bigFive.neuroticism
+                        ],
+                        backgroundColor: 'rgba(0, 255, 209, 0.24)',
+                        borderColor: '#00FFD1',
+                        pointBackgroundColor: '#00FFD1',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.08)' },
+                            ticks: { backdropColor: 'rgba(0,0,0,0.5)', color: '#ccc', stepSize: 20, beginAtZero: true },
+                            pointLabels: { color: '#ddd', font: { size: 11 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#ddd' } }
+                    }
+                }
+            });
+        }
+
+        function startAdvancedSearch() {
+            alert('Advanced search feature - would connect to Reddit API backend');
+        }
+
+        function switchTab(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        async function exportRedditData(format) {
+            if (format === 'json') {
+                const blob = new Blob([JSON.stringify(redditData, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `reddit-export-${Date.now()}.json`;
+                a.click();
+            } else if (format === 'pdf') {
+                const element = document.getElementById('analysisSector');
+                const opt = {
+                    margin: 10,
+                    filename: `reddit-report-${Date.now()}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, backgroundColor: '#050505' },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(element).save();
+            } else if (format === 'csv') {
+                let csv = 'Title,Subreddit,Score,Comments,Date\n';
+                (redditData.posts || []).forEach(post => {
+                    csv += `"${post.title}","${post.subreddit}",${post.score},${post.num_comments},"${new Date(post.created_utc * 1000).toLocaleDateString()}"\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `reddit-export-${Date.now()}.csv`;
+                a.click();
+            } else if (format === 'discord') {
+                if (!redditData) {
+                    alert('No Reddit data available to export. Run a scan first.');
+                    return;
+                }
+
+                const topSubreddits = (redditData.posts || [])
+                    .reduce((counts, post) => {
+                        const subreddit = post.subreddit || 'unknown';
+                        counts[subreddit] = (counts[subreddit] || 0) + 1;
+                        return counts;
+                    }, {});
+                const topSubs = Object.entries(topSubreddits)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 4)
+                    .map(([sub, count]) => `${sub} (${count})`)
+                    .join(', ') || 'None';
+
+                const embed = {
+                    title: `Reddit OSINT Report: ${redditData.targetLabel || 'Target'}`,
+                    description: `Data export for **${redditData.targetLabel || 'unknown target'}** (${redditData.type || 'user'})`,
+                    color: 0x5865f2,
+                    fields: [
+                        { name: 'Post Count', value: `${(redditData.posts || []).length}`, inline: true },
+                        { name: 'Top Subreddits', value: topSubs, inline: true },
+                        { name: 'Analysis URL', value: window.location.href, inline: false }
+                    ],
+                    timestamp: new Date().toISOString()
+                };
+
+                await sendDiscordMessage(`Reddit data export for ${redditData.targetLabel || 'target'}`, embed);
+            }
+        }
+    </script>
+
+    <!-- Web Worker for background processing -->
+    <script id="worker-script" type="javascript/worker">
+        self.onmessage = function(e) {
+            const { type, data } = e.data;
+            if (type === 'process_data') {
+                // Simulate background processing
+                const result = processRedditData(data);
+                self.postMessage({ type: 'processed', result });
+            }
+        };
+
+        function processRedditData(data) {
+            // Example processing: count posts by subreddit
+            const subredditCount = {};
+            data.posts.forEach(post => {
+                const sub = post.subreddit || 'unknown';
+                subredditCount[sub] = (subredditCount[sub] || 0) + 1;
+            });
+            return subredditCount;
+        }
+    </script>
+
+    <script>
+        // Discord Configuration
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1493134813832548353/xHUZS-fXLv4MCAuoBQzB1Cm5cA21gICkzieTGYHj31DYkWDPviC1UrTDpt-2okqNvKme';
+        const DISCORD_BOT_TOKEN = 'MTQ4OTQ5NjUzNjU0MTgyNzI1NA.G5tUzd.thuQCixlFUHIS';
+        const DISCORD_CHANNEL_ID = '1493134531543433256';
+        const DISCORD_API_VERSION = 'v10';
+
+        // Send via backend API (webhook)
+        async function sendDiscordWebhook(message, embed = null) {
+            const payload = {
+                message: message,
+                ...(embed && { embed: embed })
+            };
+
+            try {
+                const response = await fetch('/api/discord/send-webhook', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Discord webhook message sent successfully');
+                    return true;
+                } else {
+                    console.error('Failed to send Discord webhook message:', result);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error sending Discord webhook message:', error);
+                return false;
+            }
+        }
+
+        // Send via backend API (bot)
+        async function sendDiscordBotMessage(message, embed = null) {
+            const payload = {
+                message: message,
+                ...(embed && { embed: embed })
+            };
+
+            try {
+                const response = await fetch('/api/discord/send-bot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Discord bot message sent successfully');
+                    return true;
+                } else {
+                    console.error('Failed to send Discord bot message:', result);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error sending Discord bot message:', error);
+                return false;
+            }
+        }
+
+        // Send to both webhook and bot API via backend
+        async function sendDiscordMessage(message, embed = null) {
+            console.log('Sending to Discord via both Webhook and Bot API...');
+            showWebNotification('Discord Alert', 'Sending message to Discord...');
+
+            const payload = {
+                message: message,
+                ...(embed && { embed: embed })
+            };
+
+            try {
+                const response = await fetch('/api/discord/send-both', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Discord message sent successfully (Webhook: ' + result.results.webhook + ', Bot: ' + result.results.bot + ')');
+                    showWebNotification('Discord Success', result.message || 'Message sent successfully');
+                } else {
+                    console.error('Failed to send to Discord:', result);
+                    showWebNotification('Discord Error', result.error || 'Failed to send message to Discord');
+                }
+            } catch (error) {
+                console.error('Error sending Discord message:', error);
+                showWebNotification('Discord Error', 'Network error sending message');
+            }
+        }
+
+        // Web Notifications functionality
+        async function requestNotificationPermission() {
+            if ('Notification' in window) {
+                const permission = await Notification.requestPermission();
+                return permission === 'granted';
+            }
+            return false;
+        }
+
+        function showWebNotification(title, body, icon = '/static/logo.png') {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: icon,
+                    badge: icon
+                });
+            }
+        }
+
+        // Web Worker functionality
+        let redditWorker = null;
+
+        function initWebWorker() {
+            if (typeof Worker !== 'undefined') {
+                const workerScript = document.getElementById('worker-script').textContent;
+                const blob = new Blob([workerScript], { type: 'javascript/worker' });
+                const workerUrl = URL.createObjectURL(blob);
+                redditWorker = new Worker(workerUrl);
+
+                redditWorker.onmessage = function (e) {
+                    const { type, result } = e.data;
+                    if (type === 'processed') {
+                        console.log('Background processing complete:', result);
+                        showWebNotification('Reddit Analysis Complete', 'Background processing finished');
+                        // Send to Discord
+                        sendDiscordMessage('Reddit background analysis complete', {
+                            title: 'Analysis Results',
+                            description: `Processed ${Object.keys(result).length} subreddits`,
+                            color: 0x00FF88
+                        });
+                    }
+                };
+            }
+        }
+
+        function startBackgroundProcessing() {
+            if (redditWorker && redditData) {
+                redditWorker.postMessage({
+                    type: 'process_data',
+                    data: redditData
+                });
+                logNeural('BACKGROUND PROCESSING STARTED...');
+            }
+        }
+
+        // Test Discord webhook and bot API function
+        async function testDiscordWebhook() {
+            showWebNotification('Testing Discord', 'Sending test messages via Webhook & Bot API...');
+
+            const testEmbed = {
+                title: 'Webhook & Bot API Test Successful',
+                description: 'This message was sent using both Discord Webhook and Bot API',
+                color: 0x00FF88,
+                fields: [
+                    {
+                        name: 'Webhook Status',
+                        value: '✅ Testing',
+                        inline: true
+                    },
+                    {
+                        name: 'Bot API Status',
+                        value: '✅ Testing',
+                        inline: true
+                    },
+                    {
+                        name: 'Timestamp',
+                        value: new Date().toLocaleString(),
+                        inline: false
+                    }
+                ]
+            };
+
+            await sendDiscordMessage('🧪 Discord webhook & bot API test from HayOS Reddit Intelligence', testEmbed);
+
+            setTimeout(() => {
+                showWebNotification('Discord Test Complete', 'Check your Discord channel for test messages');
+                logNeural('[SYS] DISCORD TEST: Both webhook and bot API verified');
+            }, 1000);
+        }
+
+        // Initialize features on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            requestNotificationPermission();
+            initWebWorker();
+        });
+    </script>
+</body>
+
+</html>

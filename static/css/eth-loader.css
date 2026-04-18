@@ -1,0 +1,338 @@
+#eth-loader-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #030303;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+        }
+
+        #eth-loader-wrapper.eth-fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .eth-loader-bg {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 209, 0.025) 2px,
+                    rgba(0, 255, 209, 0.025) 4px);
+            pointer-events: none;
+        }
+
+        .eth-loader-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 255, 209, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 209, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.5;
+        }
+
+        .eth-loader-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            width: 360px;
+        }
+
+        /* ── Ethereum SVG Icon ── */
+        .eth-icon-wrap {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eth-icon-wrap svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        @keyframes eth-spin-scale {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            25% {
+                transform: scale(1.06) rotate(3deg);
+            }
+
+            50% {
+                transform: scale(0.97) rotate(-2deg);
+            }
+
+            75% {
+                transform: scale(1.04) rotate(1deg);
+            }
+        }
+
+        @keyframes eth-glitch-clip {
+            0% {
+                clip-path: polygon(0 0, 100% 0, 100% 25%, 0 25%);
+                transform: translateX(-4px);
+            }
+
+            20% {
+                clip-path: polygon(0 35%, 100% 35%, 100% 60%, 0 60%);
+                transform: translateX(4px);
+            }
+
+            40% {
+                clip-path: polygon(0 70%, 100% 70%, 100% 85%, 0 85%);
+                transform: translateX(-2px);
+            }
+
+            60% {
+                clip-path: polygon(0 10%, 100% 10%, 100% 30%, 0 30%);
+                transform: translateX(3px);
+            }
+
+            80% {
+                clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
+                transform: translateX(-3px);
+            }
+
+            100% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes eth-glitch-color {
+            0% {
+                filter: hue-rotate(0deg) brightness(1.2);
+            }
+
+            30% {
+                filter: hue-rotate(90deg) brightness(0.8) saturate(2);
+            }
+
+            60% {
+                filter: hue-rotate(200deg) brightness(1.5) saturate(1.5);
+            }
+
+            100% {
+                filter: hue-rotate(0deg) brightness(1);
+            }
+        }
+
+        .eth-icon-main {
+            animation: eth-spin-scale 2.5s ease-in-out infinite;
+        }
+
+        .eth-icon-glitch1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            animation: eth-glitch-clip 3s steps(1) infinite,
+                eth-glitch-color 3s infinite;
+        }
+
+        .eth-icon-glitch2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            animation: eth-glitch-clip 3s steps(1) infinite 0.15s,
+                eth-glitch-color 3s infinite 0.3s;
+            filter: hue-rotate(120deg);
+        }
+
+        @keyframes eth-glitch-trigger {
+
+            0%,
+            89% {
+                opacity: 0;
+            }
+
+            90%,
+            95% {
+                opacity: 0.8;
+            }
+
+            96%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .eth-icon-glitch1 {
+            animation-name: eth-glitch-clip, eth-glitch-color, eth-glitch-trigger;
+        }
+
+        .eth-icon-glitch2 {
+            animation: eth-glitch-clip 3s steps(1) infinite 0.15s,
+                eth-glitch-color 3s infinite 0.3s,
+                eth-glitch-trigger 3s infinite 0.5s;
+        }
+
+        /* ── Text Area ── */
+        .eth-loader-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: #00FFD1;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .eth-loader-percent {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: #00FFD1;
+        }
+
+        .eth-loader-progress-container {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 209, 0.1);
+            position: relative;
+        }
+
+        .eth-loader-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #00FFD1;
+            transition: width 0.2s linear;
+        }
+
+        .eth-loader-console {
+            width: 100%;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: rgba(0, 255, 209, 0.5);
+            letter-spacing: 1px;
+            line-height: 1.6;
+            min-height: 70px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .eth-loader-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: rgba(0, 255, 209, 0.8);
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        @keyframes eth-status-blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .eth-loader-status {
+            animation: eth-status-blink 1.4s ease-in-out infinite;
+        }
+
+        /* Horizontal corner brackets on loader panel */
+        .eth-loader-content::before,
+        .eth-loader-content::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+        }
+
+        .eth-loader-content::before {
+            top: -18px;
+            left: 0;
+            border-top: 2px solid #CC3333;
+            border-left: 2px solid #CC3333;
+        }
+
+        .eth-loader-content::after {
+            bottom: -18px;
+            right: 0;
+            border-bottom: 2px solid #CC3333;
+            border-right: 2px solid #CC3333;
+        }
+
+        /* ── Glitch Text (Exclusive to some loaders) ── */
+        .eth-glitch-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            color: #00FFD1;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .eth-glitch-text::before,
+        .eth-glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #030303;
+        }
+
+        .eth-glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: eth-glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .eth-glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: eth-glitch-anim 5s infinite linear alternate;
+        }
+
+        @keyframes eth-glitch-anim {
+            0% {
+                clip: rect(31px, 9999px, 94px, 0);
+            }
+
+            20% {
+                clip-path: inset(62% 0 42% 0);
+            }
+
+            40% {
+                clip-path: inset(16% 0 78% 0);
+            }
+
+            60% {
+                clip-path: inset(55% 0 13% 0);
+            }
+
+            80% {
+                clip-path: inset(96% 0 37% 0);
+            }
+
+            100% {
+                clip-path: inset(22% 0 85% 0);
+            }
+        }
