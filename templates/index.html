@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOCIO SENTINAL // SOCIAL MEDIA OSINT - HayOS</title>
+    <link rel="icon" href="https://haybnz.web.app/logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/tactical-index.css">
+    <link rel="stylesheet" href="/static/css/eth-loader.css">
+</head>
+
+<body>
+    <!-- ETH Loader -->
+    <div id="eth-loader-wrapper">
+        <div class="eth-loader-bg"></div>
+        <div class="eth-loader-grid"></div>
+        <div class="eth-loader-content">
+            <div class="eth-icon-wrap">
+                <svg class="eth-icon-main" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" fill="#00FFD1"/>
+                </svg>
+                <svg class="eth-icon-glitch1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" fill="#00FFD1"/>
+                </svg>
+                <svg class="eth-icon-glitch2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" fill="#00FFD1"/>
+                </svg>
+            </div>
+            <div class="eth-loader-title">SOCIO SENTINAL</div>
+            <div class="eth-loader-percent" id="eth-percent">0%</div>
+            <div class="eth-loader-progress-container">
+                <div class="eth-loader-progress-bar" id="eth-progress-bar"></div>
+            </div>
+            <div class="eth-loader-console" id="eth-console">
+                [SYS] Initializing neural networks...<br>
+                [SYS] Loading social intelligence modules...<br>
+                [SYS] Establishing secure connections...<br>
+                [SYS] System ready for deployment.
+            </div>
+            <div class="eth-loader-status">LOADING</div>
+        </div>
+    </div>
+
+    <div class="bg-grid"></div>
+
+    <!-- Top Navigation -->
+    <nav class="topnav">
+        <div class="left-group">
+            <div class="logo-section">
+                <div class="logo-icon" aria-hidden="true">
+                    <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(10, 15)">
+                            <path
+                                d="M30 30 C25 15, 35 10, 40 15 C45 10, 55 15, 50 30 C55 45, 45 50, 40 45 C35 50, 25 45, 30 30"
+                                fill="none" stroke="#00FF88" stroke-width="4" />
+                            <path d="M30 30 C25 20, 20 15, 15 10" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <path d="M50 30 C55 20, 60 15, 65 10" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <path d="M30 30 C25 40, 20 45, 15 50" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <path d="M50 30 C55 40, 60 45, 65 50" stroke="#00FF88" stroke-width="3" fill="none" />
+                            <circle cx="30" cy="30" r="5" fill="none" stroke="#00FF88" stroke-width="2" opacity="0.0" />
+                            <circle cx="50" cy="30" r="5" fill="none" stroke="#00FF88" stroke-width="2" opacity="0.0" />
+                            <circle cx="15" cy="10" r="3" fill="none" stroke="#00FF88" stroke-width="1.5" opacity="0.0" />
+                            <circle cx="65" cy="10" r="3" fill="none" stroke="#00FF88" stroke-width="1.5" opacity="0.0" />
+                            <circle cx="15" cy="50" r="3" fill="none" stroke="#00FF88" stroke-width="1.5" opacity="0.0" />
+                            <circle cx="65" cy="50" r="3" fill="none" stroke="#00FF88" stroke-width="1.5" opacity="0.0" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SOCIO SENTINAL</h2>
+                    <p>SOCIAL OSINT</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-stats">
+            <div class="stat-item">
+                <div class="status-dot"></div>
+                <span>SYSTEM ONLINE</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Floating Main Content -->
+    <div class="floating-container">
+        <div class="floating-content">
+            <!-- Social Media Navigation Card -->
+            <div class="card social-nav-card">
+                <h2><i class="fas fa-satellite-dish"></i> SOCIAL MEDIA INTELLIGENCE</h2>
+                <div class="apps-grid">
+                    <div class="app-item" onclick="window.location.href='social/twitter'">
+                        <i class="fab fa-twitter"></i>
+                        <span>TWITTER</span>
+                    </div>
+                    <div class="app-item" onclick="window.location.href='social/reddit'">
+                        <i class="fab fa-reddit"></i>
+                        <span>REDDIT</span>
+                    </div>
+                    <div class="app-item" onclick="showDevelopmentPopup()">
+                        <i class="fab fa-instagram"></i>
+                        <span>INSTAGRAM</span>
+                    </div>
+                    <div class="app-item" onclick="showDevelopmentPopup()">
+                        <i class="fab fa-facebook"></i>
+                        <span>FACEBOOK</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status Card -->
+            <div class="card status-card">
+                <h2><i class="fas fa-server"></i> SYSTEM STATUS</h2>
+                <p><i class="fas fa-check-circle"></i> FLASK APPLICATION: ACTIVE</p>
+                <p><i class="fas fa-check-circle"></i> DATABASE: CONNECTED</p>
+                <p><i class="fas fa-check-circle"></i> API ENDPOINTS: OPERATIONAL</p>
+                <p><i class="fas fa-clock"></i> UPTIME: <span id="uptime">00:00:00</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Development Popup Modal -->
+    <div id="development-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-tools"></i> UNDER DEVELOPMENT</h3>
+                <span class="modal-close" onclick="closeDevelopmentPopup()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>This feature is currently under development.</p>
+                <p>Please check our GitHub for updates:</p>
+                <a href="https://github.com/h9zdev/SocioSential" target="_blank" class="modal-link">
+                    <i class="fab fa-github"></i> https://github.com/h9zdev/SocioSential
+                </a>
+                <p>Or sign in for updates:</p>
+                <a href="https://haybnz.web.app/#section-contact" target="_blank" class="modal-link">
+                    <i class="fas fa-envelope"></i> https://haybnz.web.app/#section-contact
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Floating Container Styles */
+        .floating-container {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .floating-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            width: 90%;
+            pointer-events: auto;
+            animation: float-in 1s ease-out;
+        }
+
+        @keyframes float-in {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .social-nav-card,
+        .status-card {
+            animation: card-float 3s ease-in-out infinite;
+        }
+
+        .social-nav-card {
+            animation-delay: 0s;
+        }
+
+        .status-card {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes card-float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            position: relative;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid var(--accent-red);
+            border-left: 2px solid var(--accent-red);
+        }
+
+        .modal-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border-bottom: 2px solid var(--accent-red);
+            border-right: 2px solid var(--accent-red);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 255, 209, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .modal-close {
+            color: var(--text-dim);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-red);
+        }
+
+        .modal-body {
+            color: var(--text-main);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .modal-body p {
+            margin-bottom: 10px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            color: var(--neon-yellow);
+            text-decoration: none;
+            padding: 5px 10px;
+            background: rgba(255, 191, 0, 0.1);
+            border: 1px solid rgba(255, 191, 0, 0.3);
+            margin: 5px 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .modal-link:hover {
+            background: rgba(255, 191, 0, 0.2);
+            border-color: var(--neon-yellow);
+        }
+    </style>
+
+    <script>
+        // ETH Loader functionality
+        let ethProgress = 0;
+        const ethLoader = document.getElementById('eth-loader-wrapper');
+        const ethPercent = document.getElementById('eth-percent');
+        const ethProgressBar = document.getElementById('eth-progress-bar');
+        const ethConsole = document.getElementById('eth-console');
+
+        const consoleMessages = [
+            '[SYS] Initializing neural networks...',
+            '[SYS] Loading social intelligence modules...',
+            '[SYS] Establishing secure connections...',
+            '[SYS] Scanning social media endpoints...',
+            '[SYS] Calibrating AI analysis engines...',
+            '[SYS] System ready for deployment.'
+        ];
+
+        function updateETHLoader() {
+            ethProgress += Math.random() * 15;
+            if (ethProgress > 100) ethProgress = 100;
+
+            ethPercent.textContent = Math.floor(ethProgress) + '%';
+            ethProgressBar.style.width = ethProgress + '%';
+
+            // Update console messages
+            const messageIndex = Math.floor((ethProgress / 100) * consoleMessages.length);
+            if (messageIndex < consoleMessages.length) {
+                ethConsole.innerHTML = consoleMessages.slice(0, messageIndex + 1).join('<br>');
+            }
+
+            if (ethProgress < 100) {
+                setTimeout(updateETHLoader, 200 + Math.random() * 300);
+            } else {
+                // Loader complete
+                setTimeout(() => {
+                    ethLoader.classList.add('eth-fade-out');
+                    setTimeout(() => {
+                        ethLoader.style.display = 'none';
+                    }, 1200);
+                }, 500);
+            }
+        }
+
+        // Start ETH loader
+        setTimeout(updateETHLoader, 500);
+
+        // Uptime counter
+        let startTime = Date.now();
+
+        function updateUptime() {
+            const elapsed = Date.now() - startTime;
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+
+            document.getElementById('uptime').textContent =
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        setInterval(updateUptime, 1000);
+        updateUptime();
+
+        // Development popup functions
+        function showDevelopmentPopup() {
+            document.getElementById('development-modal').style.display = 'flex';
+        }
+
+        function closeDevelopmentPopup() {
+            document.getElementById('development-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('development-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
