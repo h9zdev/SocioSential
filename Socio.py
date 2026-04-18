@@ -1610,7 +1610,7 @@ def send_discord_bot_message():
     
     try:
         response = requests.post(
-            f"https://discord.com/api/v10/channels/1493134531543433256/messages",
+            f"https://discord.com/api/v10/channels/YOUR_CHANNNEL_ID/messages",
             headers={
                 "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
                 "Content-Type": "application/json"
@@ -1669,7 +1669,7 @@ def send_discord_both():
     # Send via bot
     try:
         response = requests.post(
-            f"https://discord.com/api/v10/channels/1493134531543433256/messages",
+            f"https://discord.com/api/v10/channels/YOUR_CHANNEL_ID/messages",
             headers={
                 "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
                 "Content-Type": "application/json"
