@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # Discord Configuration
 DISCORD_BOT_TOKEN = "YOUR_API_KEY"
-DISCORD_CHANNEL_ID = YOUR_CHANNEL ID
+DISCORD_CHANNEL_ID = 0  # Replace with your channel ID
 
 # Initialize bot with intents
 intents = discord.Intents.default()
