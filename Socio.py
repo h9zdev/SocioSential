@@ -60,9 +60,9 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 # -----------------------------------------------------------------
 # 1. Config – Hugging Face setup (free API)
 # -----------------------------------------------------------------
-HF_TOKEN = "Y"                # <-- set in .env
+HF_TOKEN = os.environ.get("HF_TOKEN", "")
 if not HF_TOKEN:
-    raise RuntimeError("Set HF_TOKEN in .env")
+    logger.warning("HF_TOKEN not set in environment")
 
 HF_URL = "https://router.huggingface.co/v1/chat/completions"
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}", "Content-Type": "application/json"}
@@ -570,7 +570,7 @@ def compute_ideology_basic(texts, profile=None):
     full_target_text = f"{profile_info}\n\nRecent Samples:\n{sample_text}"
     
     # Use Hugging Face if API key is available
-    if HUGGINGFACE_API_KEY:
+    if HF_TOKEN:
         try:
             prompt = f"""<s>[INST] Analyze the comprehensive worldview and ideology of this Reddit user. 
             Do not provide a generic 'Centrist' or 'Neutral' label unless the data explicitly supports it.
