@@ -1,0 +1,9 @@
+Flask
+requests
+celery
+redis
+textblob
+vaderSentiment
+discord.py
+python-dotenv
+Werkzeug
