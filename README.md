@@ -1,24 +1,59 @@
-# SocioSential
+# 🌐 SocioSential  
 
-SocioSential is an advanced, open-source OSINT (Open Source Intelligence) framework designed for social data collection and analysis. It enables researchers, analysts, and security professionals to surface emotional patterns, behavioral anomalies, and sentiment shifts across communities and networks.
+<div align="center">
 
-Built with a focus on actionable socio-political intelligence, SocioSential leverages modern AI engines to provide deep insights into social media targets.
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![OSINT](https://img.shields.io/badge/OSINT-Framework-purple?style=for-the-badge)](https://github.com/h9zdev/SocioSential)
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=for-the-badge)](https://github.com/h9zdev/SocioSential)
+[![SocioSential](https://img.shields.io/badge/SocioSential-Active-red?style=for-the-badge)](https://github.com/h9zdev/SocioSential)
 
-## 🚀 Features
+</div>
 
-- **Twitter Neural Reconnaissance**: Analyze user profiles, tweets, and engagement metrics. Mapping of social connections and influence.
-- **Reddit Community Intelligence**: Comprehensive scanning of users (`u/`) and subreddits (`r/`).
-- **5-Layer Intelligence Analysis**:
-  - **Layer 1: Sentiment & Ideology**: Detects emotional tone and worldviews.
-  - **Layer 2: Narrative & Stance**: Analyzes framing and institutional stances.
-  - **Layer 3: Behavioral Analysis**: Detects posting patterns, automation (bot) indicators, and temporal spikes.
-  - **Layer 4: Network Structure (SNA)**: Maps influence flow and community clusters.
-  - **Layer 5: Threat & Political Status**: Assesses national threat levels, election interference, and brand reputation shifts.
-- **Multi-Engine AI Support**: Seamlessly switch between OpenAI, Hugging Face, Ollama (local), and OpenRouter.
-- **Active Surveillance & Monitoring**: Automated target monitoring with threat score tracking.
-- **Discord Alert System**: Real-time intelligence delivery via Discord Webhooks and a dedicated Discord Bot.
-- **Interactive Visualizations**: Dynamic charts, network graphs, and geospatial mapping.
-- **Data Export**: Professional PDF reports, JSON, and CSV data exports.
+<p align="center">
+  <img src="https://github.com/h9zdev/h9zdev/blob/main/assets/SocioSential.png?raw=true" alt="SocioSential" />
+</p>
+
+
+## 🧠 Overview  
+
+**SocioSential** is an open-source OSINT intelligence framework designed to map the pulse of digital societies in real time.  
+
+It collects and analyzes public social data to uncover emotional patterns, behavioral anomalies, and shifting sentiment across communities and networks.  
+
+By transforming raw social signals into structured insight, SocioSential enables researchers, analysts, and security professionals to detect emerging narratives, monitor socio-political trends, and make informed, data-driven decisions. 🚀  
+
+> [!TIP]
+> - 🚀 **Visit the Blog (Geo Sentinel Updates & Insights)** [[🌐 Open Blog]](https://haybnz.web.app/blog)
+> - 🚀 **Official Website** [[🌍 Visit Site]](https://haybnz.web.app/)
+> - 🚀 **Official Website** [[🌍 Visit Site]](https://varadaraj.online/)
+
+> [!CAUTION]
+> - 🚨 **SocioSential** — Stay updated with the latest **Socio Sentinel AI** releases and announcements. [[📝 Subscribe Here]](https://docs.google.com/forms/d/e/1FAIpQLSe3qBh6r1orih2MkLf5DjdolX0jv5Abct02363lLxpXEute-Q/viewform)
+> - SociSentail currently supports Twitter and Reddit OSINT, behavioral and sentiment analysis. Additional other social media intelligence modules and features are actively under development.
+
+## ⚡ Features  
+
+- 📡 Real-time social data aggregation  
+- 🧠 Sentiment and behavioral analysis  
+- 🌐 Community and network mapping  
+- 🔍 Detection of anomalies and trend shifts  
+- 📊 Actionable socio-political intelligence  
+
+---
+
+## 🚀 Use Cases  
+
+- Social sentiment monitoring  
+- Narrative and influence tracking  
+- OSINT investigations  
+- Behavioral analysis of online communities and the user.
+- Early detection of socio-political shifts  
+
+---
+
+## 🔗 Repository  
+
+👉 https://github.com/h9zdev/SocioSential
 
 ## 📋 Requirements
 
@@ -78,6 +113,7 @@ DISCORD_CHANNEL_ID=your_target_channel_id
 SOCIO_DB_FILE=socio.db
 ```
 
+
 ## 🏃 Running the Application
 
 ### 1. Start the Web Server
@@ -96,6 +132,9 @@ celery -A Socio.celery worker --loglevel=info
 python bot.py
 ```
 
+## 📖 API INSTRUCTIONS
+ -need to config api's  in  Socio.py, bot.py and reddit.py
+ 
 ## 📖 Usage
 
 1. **Dashboard**: Access the main interface to navigate between Twitter and Reddit modules.
@@ -104,10 +143,46 @@ python bot.py
 4. **Monitoring**: View active monitors in the Reddit Surveillance tab to track threat scores over time.
 5. **Exports**: Generate PDF reports of your findings for professional documentation.
 
-## ⚖️ License
-
-SocioSential is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## 🛡️ Disclaimer
 
 This tool is for educational and professional research purposes only. Users are responsible for complying with the Terms of Service of the social platforms accessed and all applicable local and international laws.
+
+
+
+## 📜 License
+
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License. See the [LICENSE](LICENSE) file for more details.
+
+**Unauthorized use is strictly prohibited.**
+
+📧 Contact: singularat@protn.me
+
+## ☕ Support
+
+Donate via Monero: `45PU6txuLxtFFcVP95qT2xXdg7eZzPsqFfbtZp5HTjLbPquDAugBKNSh1bJ76qmAWNGMBCKk4R1UCYqXxYwYfP2wTggZNhq`
+
+## 👥 Contributors and Developers
+
+[<img src="https://avatars.githubusercontent.com/u/67865621?s=64&v=4" width="64" height="64" alt="haybnzz">](https://github.com/h9zdev)  
+[<img src="https://avatars.githubusercontent.com/u/220222050?v=4&size=64" width="64" height="64" alt="H9yzz">](https://github.com/H9yzz)  
+[<img src="https://avatars.githubusercontent.com/u/108749445?s=64&size=64" width="64" height="64" alt="VaradScript">](https://github.com/VaradScript)  
+[<img src="https://avatars.githubusercontent.com/u/180658853?s=64&v=4" width="64" height="64" alt="Steiynbrodt">](https://github.com/Steiynbrodt)  
+
+## 👥 
+ X9 CYBERNETICS
+
+
+## Star History
+
+<a href="https://www.star-history.com/#h9zdev/GeoSentinel&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=h9zdev/GeoSentinel&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=h9zdev/GeoSentinel&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=h9zdev/GeoSentinel&type=date&legend=top-left" />
+ </picture>
+</a>
+
+
+Made with ❤️ and lots of ☕️.
+
