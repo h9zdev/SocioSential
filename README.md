@@ -39,7 +39,7 @@ By transforming raw social signals into structured insight, SocioSential enables
 - 🔍 Detection of anomalies and trend shifts  
 - 📊 Actionable socio-political intelligence  
 
----
+
 
 ## 🚀 Use Cases  
 
@@ -49,7 +49,7 @@ By transforming raw social signals into structured insight, SocioSential enables
 - Behavioral analysis of online communities and the user.
 - Early detection of socio-political shifts  
 
----
+
 
 ## 🔗 Repository  
 
@@ -143,6 +143,24 @@ python bot.py
 4. **Monitoring**: View active monitors in the Reddit Surveillance tab to track threat scores over time.
 5. **Exports**: Generate PDF reports of your findings for professional documentation.
 
+## 📸 Screenshots
+
+### 🐦 Twitter OSINT
+
+![Twitter OSINT](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/twiter.png)
+![Twitter OSINT 1](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/twt1.png)
+![Twitter OSINT 2](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/twt2.png)
+![Twitter OSINT 3](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/twt3.png)
+![Twitter OSINT 4](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/twt44.png)
+![Twitter OSINT 5](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/twt56.png)
+
+### 🟠 Reddit OSINT
+
+![Reddit OSINT 1](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/rddt1.png)
+![Reddit OSINT 2](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/rddt2.png)
+![Reddit OSINT 3](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/rddt3.png)
+![Reddit OSINT 4](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/rddt4.png)
+![Reddit OSINT 5](https://raw.githubusercontent.com/h9zdev/h9zdev/main/assets/Sociosent/Screenshot_20260411_153326.png)
 
 ## 🛡️ Disclaimer
 
@@ -163,11 +181,10 @@ This project is licensed under the Creative Commons Attribution-NonCommercial 4.
 Donate via Monero: `45PU6txuLxtFFcVP95qT2xXdg7eZzPsqFfbtZp5HTjLbPquDAugBKNSh1bJ76qmAWNGMBCKk4R1UCYqXxYwYfP2wTggZNhq`
 
 ## 👥 Contributors and Developers
+[<img src="https://avatars.githubusercontent.com/u/67865621?s=64&v=4" width="64" height="64" alt="haybnzz">](https://github.com/h9zdev) [<img src="https://avatars.githubusercontent.com/u/220222050?v=4&size=64" width="64" height="64" alt="H9yzz">](https://github.com/H9yzz) [<img src="https://avatars.githubusercontent.com/u/108749445?s=64&size=64" width="64" height="64" alt="VaradScript">](https://github.com/VaradScript)
 
-[<img src="https://avatars.githubusercontent.com/u/67865621?s=64&v=4" width="64" height="64" alt="haybnzz">](https://github.com/h9zdev)  
-[<img src="https://avatars.githubusercontent.com/u/220222050?v=4&size=64" width="64" height="64" alt="H9yzz">](https://github.com/H9yzz)  
-[<img src="https://avatars.githubusercontent.com/u/108749445?s=64&size=64" width="64" height="64" alt="VaradScript">](https://github.com/VaradScript)  
-[<img src="https://avatars.githubusercontent.com/u/180658853?s=64&v=4" width="64" height="64" alt="Steiynbrodt">](https://github.com/Steiynbrodt)  
+
+
 
 ## 👥 
  X9 CYBERNETICS
@@ -175,7 +192,7 @@ Donate via Monero: `45PU6txuLxtFFcVP95qT2xXdg7eZzPsqFfbtZp5HTjLbPquDAugBKNSh1bJ7
 
 ## Star History
 
-<a href="https://www.star-history.com/#h9zdev/GeoSentinel&type=date&legend=top-left">
+<a href="https://www.star-history.com/#h9zdev/SocioSential&type=date&legend=top-left">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=h9zdev/GeoSentinel&type=date&theme=dark&legend=top-left" />
    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=h9zdev/GeoSentinel&type=date&legend=top-left" />
